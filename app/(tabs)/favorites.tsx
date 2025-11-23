@@ -37,7 +37,7 @@ export default function FavoritesScreen() {
         numColumns={2}
         columnWrapperStyle={{ justifyContent: 'space-between' }}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 100 }}
+        contentContainerStyle={{ paddingBottom: 100, paddingHorizontal: 16 }}
         ListEmptyComponent={
           <View className="flex-1 items-center justify-center mt-20">
             <View className="h-24 w-24 rounded-full bg-surface dark:bg-slate-800 items-center justify-center mb-4">

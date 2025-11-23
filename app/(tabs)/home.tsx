@@ -2,7 +2,7 @@ import { HeroCarousel } from '@/components/HeroCarousel';
 import { MovieCard } from '@/components/MovieCard';
 import { Input } from '@/components/ui/Input';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
-import { fetchTrending, MediaItem } from '@/services/tmdb';
+import { fetchTrending, MediaItem, searchMedia } from '@/services/tmdb';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, RefreshControl, Text, TouchableOpacity, View } from 'react-native';
@@ -15,10 +15,16 @@ export default function HomeScreen() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'movie' | 'tv'>('movie');
   const [refreshing, setRefreshing] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const loadData = async () => {
     setLoading(true);
-    const data = await fetchTrending(filter);
+    let data;
+    if (searchQuery.trim()) {
+      data = await searchMedia(searchQuery);
+    } else {
+      data = await fetchTrending(filter);
+    }
     setMedia(data);
     setLoading(false);
   };
@@ -30,8 +36,11 @@ export default function HomeScreen() {
   };
 
   useEffect(() => {
-    loadData();
-  }, [filter]);
+    const timer = setTimeout(() => {
+      loadData();
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [filter, searchQuery]);
 
   const handlePress = (item: MediaItem) => {
     router.push({
@@ -55,11 +64,13 @@ export default function HomeScreen() {
           <Input 
             placeholder="Search movies & TV shows..." 
             className="bg-surface dark:bg-slate-800 border-none shadow-sm"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
           />
         </View>
       </View>
 
-      <HeroCarousel data={media.slice(0, 5)} />
+      {!searchQuery && <HeroCarousel data={media.slice(0, 5)} />}
 
       <View className="px-4 mb-4 flex-row space-x-4">
         <TouchableOpacity 

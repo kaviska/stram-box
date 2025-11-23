@@ -65,6 +65,7 @@ export default function TabLayout() {
         name="index"
         options={{
           href: null, // Hide auth screen from tabs
+          tabBarStyle: { display: 'none' },
         }}
       />
     </Tabs>
