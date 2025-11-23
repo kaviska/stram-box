@@ -1,12 +1,13 @@
-```javascript
 import { ThemeProvider } from '@/context/ThemeContext';
 import { Stack } from "expo-router";
-import { StyleSheet } from 'react-native-css-interop';
+import { vars } from 'nativewind';
 import Toast from 'react-native-toast-message';
 import '../global.css';
 
-// Configure NativeWind to use class-based dark mode
-StyleSheet.setFlag('darkMode', 'class');
+// Configure NativeWind
+vars({
+  '--theme': 'system',
+});
 
 export default function RootLayout() {
   return (
