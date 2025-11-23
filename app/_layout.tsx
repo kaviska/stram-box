@@ -1,26 +1,20 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+```javascript
+import { ThemeProvider } from '@/context/ThemeContext';
+import { Stack } from "expo-router";
+import { StyleSheet } from 'react-native-css-interop';
+import Toast from 'react-native-toast-message';
+import '../global.css';
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
+// Configure NativeWind to use class-based dark mode
+StyleSheet.setFlag('darkMode', 'class');
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
- 
-  
- 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <ThemeProvider>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
       </Stack>
-      <StatusBar style="auto" />
+      <Toast />
     </ThemeProvider>
   );
 }
