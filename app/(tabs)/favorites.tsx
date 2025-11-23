@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { FlatList, Text, View } from 'react-native';
+import Animated, { FadeInUp } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function FavoritesScreen() {
@@ -28,11 +29,16 @@ export default function FavoritesScreen() {
       <FlatList
         data={favorites}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <MovieCard 
-            item={item} 
-            onPress={() => handlePress(item)}
-          />
+        renderItem={({ item, index }) => (
+          <Animated.View 
+            entering={FadeInUp.delay(index * 100).springify()}
+            className="w-[48%]"
+          >
+            <MovieCard 
+              item={item} 
+              onPress={() => handlePress(item)}
+            />
+          </Animated.View>
         )}
         numColumns={2}
         columnWrapperStyle={{ justifyContent: 'space-between' }}

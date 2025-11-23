@@ -12,17 +12,23 @@ export function LoginForm() {
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const [loading, setLoading] = useState(false);
 
+  const validateEmail = (value: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!value) {
+      return 'Email is required';
+    } else if (!emailRegex.test(value)) {
+      return 'Please enter a valid email address';
+    }
+    return undefined;
+  };
+
   const validate = () => {
     let isValid = true;
     const newErrors: { email?: string; password?: string } = {};
 
-    // Email validation regex
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!email) {
-      newErrors.email = 'Email is required';
-      isValid = false;
-    } else if (!emailRegex.test(email)) {
-      newErrors.email = 'Please enter a valid email address';
+    const emailError = validateEmail(email);
+    if (emailError) {
+      newErrors.email = emailError;
       isValid = false;
     }
 
@@ -73,6 +79,10 @@ export function LoginForm() {
           onChangeText={(text) => {
             setEmail(text);
             if (errors.email) setErrors({ ...errors, email: undefined });
+          }}
+          onBlur={() => {
+            const error = validateEmail(email);
+            if (error) setErrors({ ...errors, email: error });
           }}
           error={errors.email}
         />
