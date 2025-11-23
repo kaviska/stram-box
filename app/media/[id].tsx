@@ -6,7 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Dimensions, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Dimensions, Image, Text, TouchableOpacity, View } from 'react-native';
 import Animated, { Extrapolation, interpolate, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 
 const { width } = Dimensions.get('window');
@@ -94,9 +94,6 @@ export default function MediaDetailsScreen() {
   const runtime = details.runtime || (details.episode_run_time ? details.episode_run_time[0] : 0);
   const duration = runtime ? `${Math.floor(runtime / 60)}h ${runtime % 60}m` : 'N/A';
 
-  // Dummy Cast Data
-  const cast = [1, 2, 3, 4, 5, 6].map((i) => ({ id: i, name: `Actor ${i}`, role: `Character ${i}` }));
-
   return (
     <View className="flex-1 bg-background">
       <Stack.Screen options={{ headerShown: false }} />
@@ -175,22 +172,6 @@ export default function MediaDetailsScreen() {
             <Text className="text-base leading-7 text-text-muted font-sans">
               {details.overview}
             </Text>
-          </View>
-
-          {/* Cast Section */}
-          <View className="mt-8">
-            <Text className="text-xl font-bold text-text font-sans mb-4">Top Cast</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 16 }}>
-              {cast.map((actor) => (
-                <View key={actor.id} className="items-center w-20">
-                  <View className="h-16 w-16 rounded-full bg-gray-200 dark:bg-gray-700 mb-2 overflow-hidden border-2 border-surface dark:border-slate-600 shadow-sm">
-                    <Ionicons name="person" size={30} color="#94a3b8" style={{ marginTop: 10, marginLeft: 2 }} />
-                  </View>
-                  <Text numberOfLines={1} className="text-xs font-bold text-text font-sans text-center">{actor.name}</Text>
-                  <Text numberOfLines={1} className="text-[10px] text-text-muted font-sans text-center">{actor.role}</Text>
-                </View>
-              ))}
-            </ScrollView>
           </View>
         </View>
       </Animated.ScrollView>
