@@ -21,6 +21,9 @@ module.exports = {
           DEFAULT: "var(--text)",
           muted: "var(--text-muted)",
         }
+      },
+      fontFamily: {
+        sans: ['Outfit', 'sans-serif'],
       }
     },
   },
