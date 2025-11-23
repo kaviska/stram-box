@@ -1,3 +1,4 @@
+import { useFavorites } from '@/context/FavoritesContext';
 import { MediaItem, TMDB_IMAGE_BASE_URL } from '@/services/tmdb';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
@@ -8,11 +9,20 @@ interface MovieCardProps {
   onPress?: () => void;
 }
 
-export function MovieCard({ item, onPress }: MovieCardProps) {
+export const MovieCard = ({ item, onPress }: MovieCardProps) => {
+  const { isFavorite, addFavorite, removeFavorite } = useFavorites();
   const title = item.title || item.name;
   const date = item.release_date || item.first_air_date;
   const year = date ? new Date(date).getFullYear() : 'N/A';
-  const rating = item.vote_average.toFixed(1);
+  const isFav = isFavorite(item.id);
+
+  const toggleFavorite = async () => {
+    if (isFav) {
+      await removeFavorite(item.id);
+    } else {
+      await addFavorite(item);
+    }
+  };
 
   return (
     <TouchableOpacity 
@@ -28,25 +38,37 @@ export function MovieCard({ item, onPress }: MovieCardProps) {
           />
         ) : (
           <View className="flex-1 items-center justify-center">
-            <Ionicons name="image-outline" size={40} color="#9ca3af" />
+            <Ionicons name="image-outline" size={40} color="#94a3b8" />
           </View>
         )}
-        <View className="absolute right-2 top-2 rounded-lg bg-black/60 px-2 py-1 backdrop-blur-md">
-          <Text className="text-xs font-bold text-yellow-400">★ {rating}</Text>
+        
+        {/* Favorite Button */}
+        <TouchableOpacity 
+          onPress={toggleFavorite}
+          className="absolute right-2 top-2 rounded-full bg-black/30 p-2 backdrop-blur-sm"
+        >
+          <Ionicons 
+            name={isFav ? "heart" : "heart-outline"} 
+            size={20} 
+            color={isFav ? "#ef4444" : "white"} 
+          />
+        </TouchableOpacity>
+
+        <View className="absolute bottom-2 right-2 rounded-md bg-black/60 px-2 py-1">
+          <Text className="text-xs font-bold text-white">
+            {item.vote_average.toFixed(1)}
+          </Text>
         </View>
       </View>
-      
       <View className="p-3">
         <Text numberOfLines={1} className="text-base font-bold text-text">
           {title}
         </Text>
         <View className="mt-1 flex-row items-center justify-between">
           <Text className="text-xs text-text-muted">{year}</Text>
-          <Text className="text-xs font-medium uppercase text-primary">
-            {item.media_type}
-          </Text>
+          <Text className="text-xs font-medium text-primary uppercase">{item.media_type}</Text>
         </View>
       </View>
     </TouchableOpacity>
   );
-}
+};

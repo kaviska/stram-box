@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/Button';
+import { useFavorites } from '@/context/FavoritesContext';
 import { useTheme } from '@/context/ThemeContext';
 import { fetchMediaDetails, MediaDetails, TMDB_IMAGE_BASE_URL } from '@/services/tmdb';
 import { Ionicons } from '@expo/vector-icons';
@@ -13,6 +14,7 @@ export default function MediaDetailsScreen() {
   const { id, type } = useLocalSearchParams();
   const router = useRouter();
   const { theme } = useTheme();
+  const { isFavorite, addFavorite, removeFavorite } = useFavorites();
   const [details, setDetails] = useState<MediaDetails | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -26,6 +28,17 @@ export default function MediaDetailsScreen() {
     };
     loadDetails();
   }, [id, type]);
+
+  const isFav = details ? isFavorite(details.id) : false;
+
+  const toggleFavorite = async () => {
+    if (!details) return;
+    if (isFav) {
+      await removeFavorite(details.id);
+    } else {
+      await addFavorite(details);
+    }
+  };
 
   if (loading) {
     return (
@@ -114,8 +127,11 @@ export default function MediaDetailsScreen() {
               className="flex-1"
               onPress={() => {}} 
             />
-            <TouchableOpacity className="items-center justify-center rounded-xl border-2 border-gray-200 dark:border-gray-700 px-4">
-              <Ionicons name="heart-outline" size={24} color={theme === 'dark' ? 'white' : 'black'} />
+            <TouchableOpacity 
+              onPress={toggleFavorite}
+              className={`items-center justify-center rounded-xl border-2 ${isFav ? 'border-red-500 bg-red-500/10' : 'border-gray-200 dark:border-gray-700'} px-4`}
+            >
+              <Ionicons name={isFav ? "heart" : "heart-outline"} size={24} color={isFav ? "#ef4444" : (theme === 'dark' ? 'white' : 'black')} />
             </TouchableOpacity>
           </View>
 
