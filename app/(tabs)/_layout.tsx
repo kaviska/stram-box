@@ -45,7 +45,7 @@ export default function TabLayout() {
         tabBarItemStyle: {
           justifyContent: 'center',
           alignItems: 'center',
-          paddingTop: 0,
+          paddingTop: 10,
         },
       }}
     >
